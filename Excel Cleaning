@@ -1,0 +1,12 @@
+=IF(G3<>"", MATCH(G3, UNIQUE(G$2:G$100), 0), "").
+=IFERROR(MATCH(Q3, {"Wednesday","Thursday","Friday","Saturday","Sunday"}, 0) + 2, "")
+=IF(B2<>"",MATCH(B2,UNIQUE($B$2:$B$100),0),"")
+=CONCAT(B3, " ", C3)
+=IF(D3<>"",MATCH(D3,UNIQUE($D$3:$D$3160),0),"")
+=IF(Q3<>"",MATCH(Q3,UNIQUE($Q$3:$Q$3160),0),"")
+=IF(Q3<>"",MATCH(Q3,UNIQUE($Q$3:$Q$3160),0),"")
+=VLOOKUP(B2, Tommys_Pizza_Orders.csv!$I:$N, 2, FALSE)
+=VLOOKUP(B2,Tommys_Pizza_Orders.csv!$I:$L, 4, FALSE)
+=VLOOKUP(B2,Tommys_Pizza_Orders.csv!$J:$N, 5, FALSE)
+=VLOOKUP(B2,Tommys_Pizza_Orders.csv!$J:$L, 2, FALSE)
+=VLOOKUP(B3,Tommys_Pizza_Orders.csv!$J:$N, 5, FALSE)
