@@ -1,0 +1,104 @@
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION QUICKDBD
+
+CREATE TABLE [Inventory] (
+    [Ingredient_ID] int NOT NULL,
+    [Purchase_Quantity] int NOT NULL,
+    [Units_Purchase_Price] decimal(5,2) NOT NULL,
+    CONSTRAINT [PK_Inventory] PRIMARY KEY CLUSTERED ([Ingredient_ID] ASC)
+)
+
+CREATE TABLE [Menu_Items] (
+    [Item_ID] int NOT NULL,
+    [Item_Name] varchar(50) NOT NULL,
+    [Category] varchar(50) NOT NULL,
+    [Size] varchar(50) NOT NULL,
+    [Unit_Selling_Price] decimal(5,2) NOT NULL,
+    CONSTRAINT [PK_Menu_Items] PRIMARY KEY CLUSTERED ([Item_ID] ASC),
+    CONSTRAINT [UQ_Menu_Items_Item_Name] UNIQUE ([Item_Name])
+)
+
+CREATE TABLE [Recipe] (
+    [Item_Name] varchar(50) NOT NULL,
+    [Ingredient_ID] int NOT NULL,
+    [Ingredient_name] varchar(50) NOT NULL,
+    [Recipe_quantity] int NOT NULL,
+    CONSTRAINT [PK_Recipe] PRIMARY KEY CLUSTERED ([Ingredient_ID] ASC),
+    CONSTRAINT [FK_Recipe_Item_Name] FOREIGN KEY ([Item_Name])
+    REFERENCES [Menu_Items] ([Item_Name])
+)
+
+CREATE TABLE [Customer] (
+    [Customer_ID] int NOT NULL,
+    [First_Name] varchar(50) NOT NULL,
+    [Last_Name] varchar(50) NOT NULL,
+    CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED ([Customer_ID] ASC)
+)
+
+CREATE TABLE [Address] (
+    [Address_ID] int NOT NULL,
+    [Address] varchar(50) NOT NULL,
+    [City] varchar(50) NOT NULL,
+    [Postcode] int NOT NULL,
+    CONSTRAINT [PK_Address] PRIMARY KEY CLUSTERED ([Address_ID] ASC)
+)
+
+CREATE TABLE [Orders] (
+    [Row_ID] int NOT NULL,
+    [order_ID] int NOT NULL,
+    [Customer_ID] int NOT NULL,
+    [Address_ID] int NOT NULL,
+    [Item_ID] int NOT NULL,
+    [quantity] int NOT NULL,
+    [delivery] bit NOT NULL,
+    [Order_Date_and_Time] datetime NOT NULL,
+    CONSTRAINT [PK_Orders] PRIMARY KEY CLUSTERED ([Row_ID] ASC),
+    CONSTRAINT [FK_Orders_Customer_ID] FOREIGN KEY ([Customer_ID])
+    REFERENCES [Customer] ([Customer_ID]),
+    CONSTRAINT [FK_Orders_Address_ID] FOREIGN KEY ([Address_ID])
+    REFERENCES [Address] ([Address_ID]) 
+)
+
+CREATE TABLE [Rotation] (
+    [Row_ID] int NOT NULL,
+    [Rotation_ID] int NOT NULL,
+    [Shift_ID] int NOT NULL,
+    [Staff_ID] int NOT NULL,
+    [Date] datetime NOT NULL,
+    CONSTRAINT [PK_Rotation] PRIMARY KEY CLUSTERED ([Row_ID] ASC)
+)
+
+CREATE TABLE [Staff] (
+    [Staff_ID] int NOT NULL,
+    [Shift_ID] int NOT NULL,
+    [Staff_First_Name] varchar(50) NOT NULL,
+    [Staff_Last_Name] varchar(50) NOT NULL,
+    [Position] varchar(50) NOT NULL,
+    [Hourly_Rate] decimal(5,2) NOT NULL,
+    CONSTRAINT [PK_Staff] PRIMARY KEY CLUSTERED ([Staff_ID] ASC)
+)
+
+CREATE TABLE [Shift] (
+    [Shift_ID] int NOT NULL,
+    [Day] varchar(50) NOT NULL,
+    [Start_Time] datetime NOT NULL,
+    [End_Time] datetime NOT NULL,
+    CONSTRAINT [PK_Shift] PRIMARY KEY CLUSTERED ([Shift_ID] ASC)
+)
+
+-- Foreign Key Constraints
+ALTER TABLE [Inventory] WITH CHECK ADD CONSTRAINT [FK_Inventory_Ingredient_ID] FOREIGN KEY([Ingredient_ID])
+REFERENCES [Recipe] ([Ingredient_ID])
+
+ALTER TABLE [Orders] WITH CHECK ADD CONSTRAINT [FK_Orders_Item_ID] FOREIGN KEY([Item_ID])
+REFERENCES [Menu_Items] ([Item_ID])
+
+ALTER TABLE [Rotation] WITH CHECK ADD CONSTRAINT [FK_Rotation_Shift_ID] FOREIGN KEY([Shift_ID])
+REFERENCES [Shift] ([Shift_ID])
+
+ALTER TABLE [Rotation] WITH CHECK ADD CONSTRAINT [FK_Rotation_Staff_ID] FOREIGN KEY([Staff_ID])
+REFERENCES [Staff] ([Staff_ID])
+
+COMMIT TRANSACTION QUICKDBD
+
